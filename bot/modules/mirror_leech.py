@@ -111,7 +111,7 @@ def _mirror_leech(bot, message, isZip=False, extract=False, isQbit=False, isLeec
                 link = file_.get_file().file_path
 
     if not is_url(link) and not is_magnet(link):
-        help_msg = f"ℹ️ {tag} Tidak ada file/link yang mau di-mirror. Lihat format dibawah!"
+        help_msg = f"{tag} There are no files/links to mirror. Check out the format below!"
         if isQbit:
             help_msg += "\n<code>/qbcommands</code> {link} pswd: xx [zip/unzip]"
             help_msg += "\n\n<b>By replying to link/file:</b>"
@@ -144,7 +144,7 @@ def _mirror_leech(bot, message, isZip=False, extract=False, isQbit=False, isLeec
 
     LOGGER.info(link)
     if multi == 0:
-        check_ = sendMessage(f"ℹ️ {tag} Sedang memeriksa link, Tunggu sebentar...", bot, message)
+        check_ = sendMessage(f"{tag} Checking link...", bot, message)
     else: check_ = None
 
     if not is_mega_link(link) and not isQbit and not is_magnet(link) \
@@ -155,7 +155,7 @@ def _mirror_leech(bot, message, isZip=False, extract=False, isQbit=False, isLeec
         if content_type is None or re_match(r'text/html|text/plain', content_type):
             try:
                 if "uptobox.com" in host or "uploadhaven.com" in host:
-                    editMessage(f"ℹ️ {tag} Generating {host} direct link. Tunggu sebentar...", check_)
+                    editMessage(f"ℹ️ {tag} Generating {host} direct link...", check_)
                     link = direct_link_generator(link, host)
                 elif "gofile.io" in host:
                     link, _headers = direct_link_generator(link, host)
@@ -169,7 +169,7 @@ def _mirror_leech(bot, message, isZip=False, extract=False, isQbit=False, isLeec
                 if check_ != None:
                     deleteMessage(bot, check_); check_ = None
                 if str(e).startswith('ERROR:'):
-                    return sendMessage(f"⚠️ {tag} {e}", bot, message)
+                    return sendMessage(f"{tag} {e}", bot, message)
 
     if check_ != None:
         deleteMessage(bot, check_); check_ = None
@@ -177,9 +177,9 @@ def _mirror_leech(bot, message, isZip=False, extract=False, isQbit=False, isLeec
 
     if is_gdrive_link(link):
         if not isZip and not extract and not isLeech:
-            gmsg = f"Gunakan /{BotCommands.CloneCommand} untuk menyalin Gdrive/gdtot/appdrive/sharepw file\n\n"
-            gmsg += f"Gunakan /{BotCommands.ZipMirrorCommand[0]} untuk mengarsip file Gdrive/gdtot/appdrive/sharepw\n\n"
-            gmsg += f"Gunakan /{BotCommands.UnzipMirrorCommand[0]} untuk mengekstraks file Gdrive/gdtot/appdrive/sharepw"
+            gmsg = f"Use /{BotCommands.CloneCommand} to clone Google Drive file/folder\n\n"
+            gmsg += f"Use /{BotCommands.ZipMirrorCommand[0]} to make zip of Google Drive folder\n\n"
+            gmsg += f"Use /{BotCommands.UnzipMirrorCommand[0]} to extracts Google Drive archive folder/file"
             smsg = sendMessage(gmsg, bot, message)
             Thread(target=auto_delete_message, args=(bot, message, smsg)).start()
         else:
