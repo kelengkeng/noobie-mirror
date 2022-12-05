@@ -33,7 +33,7 @@ def _clone(message, bot):
         if not reply_to.from_user.is_bot:
             tag = reply_to.from_user.mention_html(reply_to.from_user.first_name)
     if multi == 0:
-        _msg = sendMessage(f"♻️ {tag} Cloning: <code>{link}</code>", bot, message)
+        _msg = sendMessage(f"{tag} Cloning: <code>{link}</code>", bot, message)
     else: _msg = None
     try:
         if is_gdtot := is_gdtot_link(link):
@@ -48,21 +48,21 @@ def _clone(message, bot):
     except DirectDownloadLinkException as e:
         if _msg:
             deleteMessage(bot, _msg)
-        return sendMessage(f"⚠️ {tag} {e}", bot, message)
+        return sendMessage(f"{tag} {e}", bot, message)
     if is_gdrive_link(link):
         gd = GoogleDriveHelper()
         res, size, name, files = gd.helper(link)
         if res != "":
             if _msg:
                 deleteMessage(bot, _msg)
-            return sendMessage(f"⚠️ {tag} {res}", bot, message)
+            return sendMessage(f"{tag} {res}", bot, message)
         if STOP_DUPLICATE:
             LOGGER.info('Checking File/Folder if already in Drive...')
             cap, f_name = gd.drive_list(name, True, True)
             if cap:
                 if _msg:
                     deleteMessage(bot, _msg)
-                dupmsg = f"⚠️ {tag} Download kamu dihentikan karena: <code>{name}</code> <b><u>sudah ada di Drive</u></b>"
+                dupmsg = f"{tag} Your download was stopped because: <code>{name}</code> <b><u>already in Drive</u></b>"
                 sendFile(bot, message, f_name, dupmsg)
                 return
         if CLONE_LIMIT:
@@ -70,7 +70,7 @@ def _clone(message, bot):
             if size > CLONE_LIMIT * 1024**3:
                 if _msg:
                     deleteMessage(bot, _msg)
-                msg2 = f'⚠️ {tag} Gagal, Clone limit adalah {CLONE_LIMIT}GB.\nUkuran File/Folder kamu adalah {get_readable_file_size(size)}.'
+                msg2 = f'{tag} Failed, clone limit is {CLONE_LIMIT}GB.\nYour File/Folder Size is {get_readable_file_size(size)}.'
                 return sendMessage(msg2, bot, message)
         if multi > 1:
             sleep(4)
@@ -105,14 +105,14 @@ def _clone(message, bot):
                 pass
         if _msg:
             deleteMessage(bot, _msg)
-        cc = f'\n⏱ <b>Selesai Dalam: </b>{get_readable_time(time() - message.date.timestamp())}'
-        cc += f'\n\n👤 <b>Pemirror: </b>{tag}'
+        cc = f'\n<b>Finished in:</b>{get_readable_time(time() - message.date.timestamp())}'
+        cc += f'\n\n<b>cc:</b>{tag}'
         if not reply_to or reply_to.from_user.is_bot:
-            cc += f'\n#️⃣ <b>UID: </b><code>{message.from_user.id}</code>'
+            cc += f'\n<b>UID:</b><code>{message.from_user.id}</code>'
         else:
-            cc += f'\n#️⃣ <b>UID: </b><code>{reply_to.from_user.id}</code>'
+            cc += f'\n<b>UID:</b><code>{reply_to.from_user.id}</code>'
         if button in ["cancelled", ""]:
-            sendMessage(f"⚠️ {tag} {result}", bot, message)
+            sendMessage(f"{tag} {result}", bot, message)
         else:
             sendMarkup(result + cc, bot, message, button)
             LOGGER.info(f'Cloning Done: {name}')
@@ -121,7 +121,7 @@ def _clone(message, bot):
     else:
         if _msg:
             deleteMessage(bot, _msg)
-        smsg = sendMessage(f'ℹ️ Ketik Gdrive/gdtot/appdrive/sharerpw link yang mau di-mirror.', bot, message)
+        smsg = sendMessage(f'Send Gdrive link along with command or by replying to the link by command.', bot, message)
         Thread(target=auto_delete_message, args=(bot, message, smsg)).start()
 
 @new_thread
